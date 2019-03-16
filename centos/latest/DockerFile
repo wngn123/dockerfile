@@ -1,0 +1,66 @@
+FROM centos:latest
+
+MAINTAINER wngn123 wngn123@163.com
+
+RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
+    && yum update -y \
+    && yum install -y wget \
+    && yum install -y gcc \
+	&& yum install -y make \
+	&& yum install -y gdb \
+	&& yum install -y passwd \
+	&& yum install -y net-tools \
+	# 安装passwd
+    && /bin/echo "root" | passwd root --stdin \
+    && groupadd work \
+	&& useradd work -g work \
+	&& /bin/echo "work" | passwd work --stdin \
+    # 安装lrzsz
+    && wget -P /usr/local/src https://raw.githubusercontent.com/wngn123/resources/master/src/linux/centos/tar/lrzsz-0.12.20.tar.gz \
+    && tar zxvf /usr/local/src/lrzsz-0.12.20.tar.gz -C /usr/local/src \
+	&& cd /usr/local/src/lrzsz-0.12.20 \
+	&& ./configure --prefix=/usr/local/lrzsz \
+	&& make \
+	&& make install \
+	&& ln -s /usr/local/lrzsz/bin/lrz /usr/local/bin/rz \
+	&& ln -s /usr/local/lrzsz/bin/lsz /usr/local/bin/sz \
+    # 安装 ssh
+    && yum install openssh-server -y \
+    && ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key \
+    && ssh-keygen -t rsa -f /etc/ssh/ssh_host_ecdsa_key \
+    && ssh-keygen -t rsa -f /etc/ssh/ssh_host_ed25519_key \
+    && /bin/sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config \
+    && /bin/sed -i "s/#PermitRootLogin yes/PermitRootLogin yes/g" /etc/ssh/sshd_config \
+    # 配置
+    && echo "" >> /etc/bashrc \
+    && echo "######################" >> /etc/bashrc \
+    && echo "# alias " >> /etc/bashrc \
+    && echo "######################" >> /etc/bashrc \
+    && echo "alias cp='cp -i'" >> /etc/bashrc \
+    && echo "alias egrep='egrep --color=auto'" >> /etc/bashrc \
+    && echo "alias fgrep='fgrep --color=auto'" >> /etc/bashrc \
+    && echo "alias grep='grep --color=auto'" >> /etc/bashrc \
+    && echo "alias l.='ls -d .* --color=auto'" >> /etc/bashrc \
+    && echo "alias la='ls -la --color=auto'" >> /etc/bashrc \
+    && echo "alias lh='ls -lah --color=auto'" >> /etc/bashrc \
+    && echo "alias ls='ls --color=auto'" >> /etc/bashrc \
+    && echo "alias mv='mv -i'" >> /etc/bashrc \
+    && echo "alias rm='rm -i'" >> /etc/bashrc \
+    && echo "alias vi='vim'" >> /etc/bashrc \
+    && echo "alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'" >> /etc/bashrc \
+    && echo "alias datetime='date +\"%Y-%m-%d %H:%M:%S\"'" >> /etc/bashrc \
+    && echo "alias ll='ls --time-style \"+%Y-%m-%d %H:%M:%S\" -lht --color=auto'" >> /etc/bashrc \
+    && echo "" >> /etc/profile \
+	&& echo "export LC_ALL=en_US.UTF-8"  >>  /etc/profile \
+	&& echo "" >> /etc/profile \
+	&& echo "umask 002" >> /etc/profile \
+	&& source /etc/profile 
+#	&& chmod u+w /etc/sudoers \
+#    && echo "work       ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers \
+#    && chmod u-w /etc/sudoers
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd","-D"]
+# ENTRYPOINT ["/bin/bash"]
