@@ -1,0 +1,35 @@
+FROM wngn123/java:latest
+
+MAINTAINER wngn123 wngn123@163.com
+
+LABEL version="1.0.0"
+LABEL description="zookeeper"
+
+ENV ZK_MYID=0 \ 
+    ZK_DATA=/zk/data \ 
+    ZK_DATALOG=/zk/datalog \ 
+    ZK_LOGS=/zk/logs \ 
+    ZK_CONF=/zk/conf \ 
+    ZK_PORT=2181 \ 
+    ZK_TICK_TIME=2000 \
+    ZK_INIT_LIMIT=5 \
+    ZK_SYNC_LIMIT=2 \
+    ZK_AUTOPURGE_PURGEINTERVAL=0 \
+    ZK_AUTOPURGE_SNAPRETAINCOUNT=3 \
+    ZK_MAX_CLIENT_CNXNS=60  
+
+ENV ZK_CLUSTER=server.$ZK_MYID=localhost:2888:3888 \
+    ZOO_LOG_DIR=$ZK_LOGS
+
+ADD zk.tar.gz /usr/local
+ADD startup.sh /usr/local/zk
+
+RUN chmod ugo+x /usr/local/zk/startup.sh
+
+VOLUME ["$ZK_DATA","$ZK_CONF","$ZK_LOGS","$ZK_DATALOG"]
+
+EXPOSE 22 2181 2888 3888	
+
+WORKDIR /usr/local/zk
+
+CMD ["./startup.sh"]
