@@ -1,0 +1,15 @@
+FROM redis
+
+MAINTAINER wngn123 wngn123@163.com
+
+RUN mkdir /redis && mkdir /redis/conf && mkdir /redis/data && mkdir /redis/logs && chown redis:redis /redis
+
+VOLUME /redis
+
+COPY redis.conf /redis/conf/redis.conf
+
+RUN chmod 777 /redis/conf/redis.conf
+
+WORKDIR /redis
+
+CMD [ "redis-server", "/redis/conf/redis.conf" ]
