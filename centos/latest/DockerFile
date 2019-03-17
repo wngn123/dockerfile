@@ -5,6 +5,8 @@ MAINTAINER wngn123 wngn123@163.com
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
     && yum update -y \
+	&& yum install -y vim \
+	&& yum install -y nc \
     && yum install -y wget \
     && yum install -y gcc \
 	&& yum install -y make \

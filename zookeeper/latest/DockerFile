@@ -28,7 +28,7 @@ RUN chmod ugo+x /usr/local/zk/startup.sh
 
 VOLUME ["$ZK_DATA","$ZK_CONF","$ZK_LOGS","$ZK_DATALOG"]
 
-EXPOSE 22 2181 2888 3888	
+EXPOSE 2181 2888 3888	
 
 WORKDIR /usr/local/zk
 

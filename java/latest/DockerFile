@@ -1,4 +1,4 @@
-FROM wngn123/centos:latest
+FROM wngn123/centos:base
 
 MAINTAINER wngn123 wngn123@163.com
 

@@ -1,0 +1,29 @@
+FROM centos:latest
+
+MAINTAINER wngn123 wngn123@163.com
+
+RUN bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "" >> /etc/bashrc \
+    && echo "######################" >> /etc/bashrc \
+    && echo "# alias " >> /etc/bashrc \
+    && echo "######################" >> /etc/bashrc \
+    && echo "alias cp='cp -i'" >> /etc/bashrc \
+    && echo "alias egrep='egrep --color=auto'" >> /etc/bashrc \
+    && echo "alias fgrep='fgrep --color=auto'" >> /etc/bashrc \
+    && echo "alias grep='grep --color=auto'" >> /etc/bashrc \
+    && echo "alias l.='ls -d .* --color=auto'" >> /etc/bashrc \
+    && echo "alias la='ls -la --color=auto'" >> /etc/bashrc \
+    && echo "alias lh='ls -lah --color=auto'" >> /etc/bashrc \
+    && echo "alias ls='ls --color=auto'" >> /etc/bashrc \
+    && echo "alias mv='mv -i'" >> /etc/bashrc \
+    && echo "alias rm='rm -i'" >> /etc/bashrc \
+    && echo "alias vi='vim'" >> /etc/bashrc \
+    && echo "alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'" >> /etc/bashrc \
+    && echo "alias datetime='date +\"%Y-%m-%d %H:%M:%S\"'" >> /etc/bashrc \
+    && echo "alias ll='ls --time-style \"+%Y-%m-%d %H:%M:%S\" -lht --color=auto'" >> /etc/bashrc \
+    && echo "" >> /etc/profile \
+	&& echo "export LC_ALL=en_US.UTF-8"  >>  /etc/profile
+
+EXPOSE 22
+
+CMD ["/bin/bash"]
